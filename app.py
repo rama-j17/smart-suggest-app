@@ -17,7 +17,7 @@ from model import GRUAttentionRecModel
 from utils import load_encoders
 
 # Configuration for the model
-MODEL_REPO_NAME = 'rama-j17/smart-suggest'  # Replace with your Hugging Face repo name
+MODEL_REPO_NAME = 'rama-j17/smart-suggest-app'  # Replace with your Hugging Face repo name
 MODEL_FILE_NAME = 'best_smartsuggest_model.pt'  # Model file name on Hugging Face
 
 # Function to download the model using huggingface_hub
