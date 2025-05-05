@@ -28,7 +28,7 @@ def download_model():
 # Load model from Hugging Face Hub
 def load_model():
     model_path = download_model()
-    model = GRUAttentionRecModel(num_items=10000, num_categories=100)  # Adjust the number of items and categories
+    model = GRUAttentionRecModel(num_items=234838, num_categories=496)  # Adjust the number of items and categories
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     return model
