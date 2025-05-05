@@ -1,0 +1,11 @@
+streamlit
+torch
+torchvision
+joblib
+numpy
+pandas
+scikit-learn
+gdown
+tqdm
+huggingface_hub
+kaggle
