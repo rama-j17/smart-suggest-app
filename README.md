@@ -130,8 +130,9 @@ from huggingface_hub import hf_hub_download
 
 MODEL_PATH = hf_hub_download(repo_id="yourusername/model_name", filename="best_smartsuggest_model.pt")
 model.load_state_dict(torch.load(MODEL_PATH))
+```
 
-License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 This `README.md` file combines the project overview, installation steps, setup instructions for uploading the model, usage guide, and project structure. It also includes the necessary steps for uploading large model files to Hugging Face and loading them for inference.
