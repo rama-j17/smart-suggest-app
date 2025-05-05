@@ -17,6 +17,16 @@ import os
 from model import GRUAttentionRecModel
 from utils import load_encoders
 
+# App Config
+st.set_page_config(page_title="SmartSuggest", layout="centered")
+
+# Title and Description
+st.title("🧠 SmartSuggest: Intelligent Product Recommender")
+st.write(
+    "Enter your recent browsing session as a list of item IDs. "
+    "Our GRU + Attention model will recommend products you're likely to engage with next."
+)
+
 # Configuration for the model
 MODEL_REPO_NAME = 'rama-j17/smart-suggest-app'  # Replace with your Hugging Face repo name
 MODEL_FILE_NAME = 'best_smartsuggest_model.pt'  # Model file name on Hugging Face
@@ -44,25 +54,40 @@ def load_encoders():
 model = load_model()
 item_encoder, category_encoder = load_encoders()
 
-# Streamlit UI for product suggestions
-st.title('Smart Suggestion System')
-
 # Input: Session History
-session_history = st.text_area("Enter session history (comma-separated item IDs):")
+st.subheader("📥 Input Session History")
+session_history = st.text_area(
+    "Enter comma-separated item IDs from your session:",
+    placeholder="e.g. 130, 76060, 17114"
+)
 
+# Handle input and run model
 if session_history:
-    session_items = list(map(int, session_history.split(',')))
+    try:
+        session_items = list(map(int, session_history.strip().split(',')))
+        if not session_items:
+            st.warning("Please enter at least one item ID.")
+        else:
+            st.success(f"Session received: {session_items}")
 
-    # Process the input session history
-    session_input = torch.tensor(session_items).unsqueeze(0)  # Add batch dimension
-    category_input = torch.zeros_like(session_input)  # Placeholder, modify as needed
+            # Prepare model input
+            session_input = torch.tensor(session_items).unsqueeze(0)  # Add batch dimension
+            category_input = torch.zeros_like(session_input)  # Placeholder, or real categories if available
 
-    # Get predictions from the model
-    with torch.no_grad():
-        logits = model(session_input, category_input)
-        top_k = torch.topk(logits, 5, dim=1).indices.squeeze().tolist()
+            # Get top 5 recommendations
+            with torch.no_grad():
+                logits = model(session_input, category_input)
+                top_k = torch.topk(logits, 5, dim=1).indices.squeeze().tolist()
 
-    # Decode the top K predictions into item names
-    top_items = item_encoder.inverse_transform(top_k)
+            # Decode item IDs
+            top_items = item_encoder.inverse_transform(top_k)
 
-    st.write(f"Top 5 recommended items: {top_items}")
+            st.subheader("🎯 Top 5 Recommended Items")
+            st.markdown("These are personalized recommendations based on your session:")
+            for rank, item in enumerate(top_items, 1):
+                st.markdown(f"**{rank}.** `{item}`")
+
+    except Exception as e:
+        st.error(f"⚠️ Error processing input: {e}")
+else:
+    st.info("Please enter your session history above to see recommendations.")
