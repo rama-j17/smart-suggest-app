@@ -12,6 +12,7 @@ import torch
 import torch.nn as nn
 import gdown
 from huggingface_hub import hf_hub_download
+import joblib
 import os
 from model import GRUAttentionRecModel
 from utils import load_encoders
